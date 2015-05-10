@@ -115,6 +115,10 @@ public class MainActivity extends Activity {
 		settings.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				LinearLayout score = (LinearLayout) findViewById(R.id.score_layout);
+				if (score.getVisibility() != View.GONE) {
+					return;
+				}
 				if (!settingsOpened) {
 					mGLView.pause();
 					openSettingsView();
@@ -180,11 +184,12 @@ public class MainActivity extends Activity {
 
 	private void openSettingsView() {
 		settingsOpened = true;
-		RangeSeekBar<Integer> tones = (RangeSeekBar<Integer>) findViewById(R.id.tones);
-		tones.setImportantValues(1, 10);
+		
 		// TODO nicely done with prefs
-		tones.setSelectedMaxValue(8);
-		tones.setSelectedMinValue(3);
+//		RangeSeekBar<Integer> tones = (RangeSeekBar<Integer>) findViewById(R.id.tones);
+//		tones.setImportantValues(1, 10);
+//		tones.setSelectedMaxValue(8);
+//		tones.setSelectedMinValue(3);
 		MySeekBar<Integer> music = (MySeekBar<Integer>) findViewById(R.id.music);
 		music.setImportantValues(1, 10);
 		int volume = (int) (10 * prefs.getFloat(PREF_VOLUME, DEFAULT_VOLUME));
@@ -201,13 +206,13 @@ public class MainActivity extends Activity {
 			}
 
 		});
-		tones.setOnRangeSeekBarChangeListener(new OnRangeSeekBarChangeListener<Integer>() {
-			@Override
-			public void onRangeSeekBarValuesChanged(RangeSeekBar<?> bar,
-					Integer minValue, Integer maxValue) {
-				// TODO handle changed range values
-			}
-		});
+//		tones.setOnRangeSeekBarChangeListener(new OnRangeSeekBarChangeListener<Integer>() {
+		// @Override
+		// public void onRangeSeekBarValuesChanged(RangeSeekBar<?> bar,
+		// Integer minValue, Integer maxValue) {
+		// // TODO handle changed range values
+		// }
+		//	});
 		LinearLayout layout = (LinearLayout) findViewById(R.id.settings_menu);
 		LayoutParams params = layout.getLayoutParams();
 		int width, height;
