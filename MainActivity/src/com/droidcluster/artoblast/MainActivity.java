@@ -1,5 +1,8 @@
 package com.droidcluster.artoblast;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
@@ -10,6 +13,7 @@ import android.content.SharedPreferences.Editor;
 import android.graphics.Point;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -17,14 +21,14 @@ import android.view.Display;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
+import android.view.ViewTreeObserver;
+import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import com.droidcluster.artoblast.R;
 import com.droidcluster.artoblast.MySeekBar.OnSeekBarChangeListener;
-import com.droidcluster.artoblast.RangeSeekBar.OnRangeSeekBarChangeListener;
 
 public class MainActivity extends Activity {
 
@@ -39,6 +43,7 @@ public class MainActivity extends Activity {
 	public static final String PREF_VOLUME = "pref_volume";
 
 	private SharedPreferences prefs;
+	private boolean paused;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -52,18 +57,60 @@ public class MainActivity extends Activity {
 
 		mGLView = (MyGLSurfaceView) findViewById(R.id.gl_view);
 		setupAnimations();
-		MySoundPlayer.initSounds(getApplicationContext(),
-				prefs.getBoolean(PREF_8, DEFAULT_8));
-		if (!MySoundPlayer.eightBit) {
-			mediaPlayer = MediaPlayer.create(this, R.raw.ambient);
-		} else {
-			mediaPlayer = MediaPlayer.create(this, R.raw.soundtrackeight);
-		}
-		mediaPlayer.start();
-		mediaPlayer.setLooping(true);
-
-		float volume = prefs.getFloat(PREF_VOLUME, DEFAULT_VOLUME);
-		mediaPlayer.setVolume(volume, volume);
+		
+        ViewTreeObserver viewTreeObserver = mGLView.getViewTreeObserver();
+        if (viewTreeObserver.isAlive()) {
+            viewTreeObserver.addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                	mGLView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                    new AsyncTask() {
+						@Override
+						protected Object doInBackground(Object... params) {
+							MySoundPlayer.initSounds(getApplicationContext(),
+									prefs.getBoolean(PREF_8, DEFAULT_8));
+							if (!MySoundPlayer.eightBit) {
+								mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.ambient);
+							} else {
+								mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.soundtrackeight);
+							}
+							return null;
+						}
+						
+						protected void onPostExecute(Object result) {
+							mediaPlayer.setVolume(0, 0);
+							mediaPlayer.start();
+							mediaPlayer.setLooping(true);
+							final float volume = prefs.getFloat(PREF_VOLUME, DEFAULT_VOLUME);
+							
+							if(paused) {
+								mediaPlayer.pause();
+								mediaPlayer.setVolume(volume, volume);
+							} else {
+								int fadeSteps = 10;
+								final Timer timer = new Timer(true);
+								TimerTask timerTask = new TimerTask() {
+									float vol = 0;
+									@Override
+									public void run() {
+										vol += 0.005;
+										mediaPlayer.setVolume(vol, vol);
+										
+										if (vol >= volume) {
+											timer.cancel();
+											timer.purge();
+										}
+									}
+								};
+								timer.schedule(timerTask, 50, 50);
+							}
+							
+						};
+                    	
+                    }.execute();
+                }
+            });
+        }
 	}
 
 	public void toggleHideyBar() {
@@ -88,17 +135,23 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onPause() {
 		super.onPause();
+		paused = true;
 		mGLView.onPause();
-		mediaPlayer.pause();
-		MySoundPlayer.pause();
+		if (mediaPlayer != null) {
+			mediaPlayer.pause();
+			MySoundPlayer.pause();
+		}
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
+		paused = false;
 		mGLView.onResume();
-		mediaPlayer.start();
-		MySoundPlayer.resume();
+		if (mediaPlayer != null) {
+			mediaPlayer.start();
+			MySoundPlayer.resume();
+		}
 	}
 
 	private void setupAnimations() {
