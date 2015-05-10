@@ -142,26 +142,26 @@ public class MySoundPlayer {
 				playSound(piano[i % piano.length]);
 				i++;
 				break;
-			case 3:
-				// melodies
-				playSound(melody1[i % melody1.length]);
-				i++;
-				break;
-			case 4:
-				// melodies
-				playSound(melody2[i % melody2.length]);
-				i++;
-				break;
-			case 5:
-				// melodies
-				playSound(melody3[i % melody3.length]);
-				i++;
-				break;
-			case 6:
-				// melodies
-				playSound(melody4[i % melody4.length]);
-				i++;
-				break;
+//			case 3:
+//				// melodies
+//				playSound(melody1[i % melody1.length]);
+//				i++;
+//				break;
+//			case 4:
+//				// melodies
+//				playSound(melody2[i % melody2.length]);
+//				i++;
+//				break;
+//			case 5:
+//				// melodies
+//				playSound(melody3[i % melody3.length]);
+//				i++;
+//				break;
+//			case 6:
+//				// melodies
+//				playSound(melody4[i % melody4.length]);
+//				i++;
+//				break;
 
 			default:
 				break;

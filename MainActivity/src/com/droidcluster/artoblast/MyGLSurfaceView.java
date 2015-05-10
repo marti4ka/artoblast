@@ -44,7 +44,7 @@ public class MyGLSurfaceView extends GLSurfaceView {
 		}
 
 		// Set the Renderer for drawing on the GLSurfaceView
-		mRenderer = new MyGLRenderer(height, width);
+		mRenderer = new MyGLRenderer(height, width, context);
 		setRenderer(mRenderer);
 
 		// Render the view only when there is a change in the drawing data

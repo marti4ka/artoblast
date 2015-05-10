@@ -16,6 +16,7 @@ public class Ball {
 	// circle variables
 	private int circlePoints = 35;
 	private float radius = 0.02f;
+	private float explosionRadius = 0.2f;
 	private float centerX;
 	private float centerY;
 	private float diff;
@@ -106,7 +107,7 @@ public class Ball {
 	}
 
 	public void explode() {
-		if (radius > 0.2) {
+		if (radius > explosionRadius) {
 			exploding = false;
 			exploded = true;
 		}
@@ -175,5 +176,10 @@ public class Ball {
 
 	public float getRadius() {
 		return radius;
+	}
+
+	public int getExplodingTime() {
+		// V = diff/5 S = 0.2 - 0.02
+		return (int)((explosionRadius - radius) / (diff/5)) + 5;
 	}
 }

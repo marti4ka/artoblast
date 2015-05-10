@@ -3,10 +3,9 @@ package com.droidcluster.artoblast;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
-import android.graphics.Bitmap;
+import android.content.Context;
 import android.opengl.GLSurfaceView;
 import android.opengl.GLU;
-import android.opengl.GLUtils;
 
 /**
  * Provides drawing instructions for a GLSurfaceView object. This class must
@@ -25,18 +24,20 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
 	private long startTime = System.currentTimeMillis();
 	private Float touchedX = null;
 	private Float touchedY = null;
+	private Context context;
 
-	public MyGLRenderer(int height, int width) {
+	public MyGLRenderer(int height, int width, Context context) {
 		super();
 		this.height = height;
 		this.width = width;
+		this.context = context;
 	}
 
 	@Override
 	public void onSurfaceCreated(GL10 gl, EGLConfig config) {
 		// Set the background frame color
 		gl.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-		box = new Box(height, width);
+		box = new Box(height, width, context);
 	}
 
 	@Override
@@ -99,6 +100,6 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
 	
 	public void newGame() {
 		
-		box = new Box(height, width);
+		box = new Box(height, width, context);
 	}
 }

@@ -32,7 +32,6 @@ public class MainActivity extends Activity {
 	private boolean settingsOpened = false;
 	private ImageView eight;
 	private MediaPlayer mediaPlayer;
-	private ViewDrawer drawer;
 
 	public static final boolean DEFAULT_8 = false;
 	public static final String PREF_8 = "pref_eight";
@@ -62,7 +61,6 @@ public class MainActivity extends Activity {
 		}
 		mediaPlayer.start();
 		mediaPlayer.setLooping(true);
-		drawer = new ViewDrawer(this);
 
 		float volume = prefs.getFloat(PREF_VOLUME, DEFAULT_VOLUME);
 		mediaPlayer.setVolume(volume, volume);
@@ -129,7 +127,7 @@ public class MainActivity extends Activity {
 			}
 		});
 		final ObjectAnimator anim1 = ObjectAnimator.ofFloat(replay,
-				"rotationY", 0, 360);
+				"rotation", 0, 360);
 		anim1.setDuration(1000);
 		anim1.setStartDelay(10000);
 		final ObjectAnimator anim2 = ObjectAnimator.ofFloat(settings,
