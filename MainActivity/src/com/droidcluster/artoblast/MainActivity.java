@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Point;
+import android.graphics.Typeface;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -27,6 +28,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.droidcluster.artoblast.MySeekBar.OnSeekBarChangeListener;
 
@@ -51,6 +53,7 @@ public class MainActivity extends Activity {
 		getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
 		getActionBar().hide();
 		setContentView(R.layout.activity_main);
+        setFontface();
 		toggleHideyBar();
 		prefs = PreferenceManager
 				.getDefaultSharedPreferences(MainActivity.this);
@@ -111,6 +114,16 @@ public class MainActivity extends Activity {
                 }
             });
         }
+	}
+
+	private void setFontface() {
+		Typeface tf = Typeface.createFromAsset(getAssets(), "2-d638a.ttf");
+        TextView finalView = (TextView) findViewById(R.id.final_view);
+        finalView.setTypeface(tf);
+        TextView finalViewCount = (TextView) findViewById(R.id.final_view_count);
+        finalViewCount.setTypeface(tf);
+        TextView appTitle = (TextView) findViewById(R.id.app_title);
+        appTitle.setTypeface(tf);
 	}
 
 	public void toggleHideyBar() {
