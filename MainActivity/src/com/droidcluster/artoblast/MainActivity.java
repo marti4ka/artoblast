@@ -34,7 +34,7 @@ import com.droidcluster.artoblast.MySeekBar.OnSeekBarChangeListener;
 
 public class MainActivity extends Activity {
 
-	private MyGLSurfaceView mGLView;
+	protected MyGLSurfaceView mGLView;
 	private boolean settingsOpened = false;
 	private ImageView eight;
 	private MediaPlayer mediaPlayer;
@@ -196,24 +196,24 @@ public class MainActivity extends Activity {
 				}
 			}
 		});
-		final ObjectAnimator anim1 = ObjectAnimator.ofFloat(replay,
+		final ObjectAnimator replayAnim = ObjectAnimator.ofFloat(replay,
 				"rotation", 0, 360);
-		anim1.setDuration(1000);
-		anim1.setStartDelay(10000);
-		final ObjectAnimator anim2 = ObjectAnimator.ofFloat(settings,
+		replayAnim.setDuration(900);
+		replayAnim.setStartDelay(10000);
+		final ObjectAnimator settingsAnim = ObjectAnimator.ofFloat(settings,
 				"rotation", 0, 360);
-		anim2.setDuration(1000);
-		anim2.setStartDelay(1000);
-		anim2.start();
-		anim1.addListener(new Animator.AnimatorListener() {
+		settingsAnim.setDuration(900);
+		settingsAnim.setStartDelay(5000);
+		settingsAnim.start();
+		replayAnim.addListener(new Animator.AnimatorListener() {
 			@Override
 			public void onAnimationCancel(Animator arg0) {
 			}
 
 			@Override
 			public void onAnimationEnd(Animator arg0) {
-				anim1.setStartDelay(3000);
-				anim1.start();
+				replayAnim.setStartDelay(7000);
+				replayAnim.start();
 			}
 
 			@Override
@@ -225,16 +225,16 @@ public class MainActivity extends Activity {
 			}
 
 		});
-		anim1.start();
-		anim2.addListener(new Animator.AnimatorListener() {
+		replayAnim.start();
+		settingsAnim.addListener(new Animator.AnimatorListener() {
 			@Override
 			public void onAnimationCancel(Animator arg0) {
 			}
 
 			@Override
 			public void onAnimationEnd(Animator arg0) {
-				anim1.setStartDelay(5000);
-				anim2.start();
+				settingsAnim.setStartDelay(5000);
+				settingsAnim.start();
 			}
 
 			@Override

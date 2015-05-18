@@ -167,6 +167,16 @@
             android:paddingTop="100dp"
             android:textColor="#2b9eff"
             android:textSize="45sp" />
+        
+         <ImageView
+            android:id="@+id/bigreplay"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="bottom|center"
+            android:contentDescription="replay"
+            android:padding="5dp"
+            android:layout_marginTop="50dp"
+            android:src="@drawable/circle" />
     </LinearLayout>
 
 </FrameLayout>

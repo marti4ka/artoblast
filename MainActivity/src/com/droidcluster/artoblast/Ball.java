@@ -17,8 +17,6 @@ public class Ball {
 	private int circlePoints = 35;
 	private float radius = 0.02f;
 	private float explosionRadius = 0.2f;
-	private float centerX;
-	private float centerY;
 	private float diff;
 
 	// outer vertices of the circle i.e. excluding the center_x,center_y
@@ -32,7 +30,7 @@ public class Ball {
 	private float maxH;
 	private float maxW;
 
-	public Ball() {
+	public Ball(float centerX, float centerY) {
 		// the initial buffer values
 		circleVertices[0] = centerX;
 		circleVertices[1] = centerY;
@@ -90,9 +88,6 @@ public class Ball {
 			translationY *= (-1);
 		}
 
-		centerX = circleVertices[0];
-		centerY = circleVertices[1];
-
 		addVerticesToBuffer();
 	}
 
@@ -117,15 +112,14 @@ public class Ball {
 		color[3] -= diff;
 	}
 
-	public void setCenter(float x, float y) {
-		this.centerX = x;
-		this.centerY = y;
-
-	}
-
 	public void setTranslation(float transX, float transY) {
 		this.translationX = transX * 0.008f;
 		this.translationY = transY * 0.008f;
+		// deal with too slow balls
+		if (Math.abs(translationX) + Math.abs(translationY) < 0.003) {
+			this.translationX *= 1.5;
+			this.translationY *= 1.5;
+		}
 		diff = (float) Math.sqrt(translationX * translationX + translationY
 				* translationY);
 	}

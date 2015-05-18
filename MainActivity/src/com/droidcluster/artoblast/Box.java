@@ -4,10 +4,10 @@ import java.util.Random;
 
 import javax.microedition.khronos.opengles.GL10;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Handler;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -18,7 +18,7 @@ public class Box {
 	private boolean exploding = false;
 	private int totalCount;
 	private Handler uiHandler;
-	private Activity context;
+	private MainActivity context;
 	private int t;
 	private int exploded;
 
@@ -34,7 +34,7 @@ public class Box {
 		// TODO
 		MySoundPlayer.tones = MySoundPlayer.r.nextInt(3);
 		uiHandler = new Handler(context.getMainLooper());
-		this.context = (Activity) context;
+		this.context = (MainActivity) context;
 		exploded = 0;
 		// TODO hide wellDone and tryAgain
 
@@ -56,11 +56,15 @@ public class Box {
 	private void generateBalls() {
 		for (int i = 0; i < balls.length; i++) {
 			Random r = new Random();
-			Ball b = new Ball();
+			// Ball b = new Ball(r.nextFloat() * 2 - 1, r.nextFloat() * 2 *
+			// width
+			// / height - width / height);
+			Ball b = new Ball(0, 0);
 			b.setMaxH(1);
 			// TODO maxW??
 			b.setMaxW(width / (float) (height + 55));
-			b.setCenter(r.nextFloat() * 2, r.nextFloat() * 2 * width / height);
+			// b.setCenter(r.nextFloat() * 2, r.nextFloat() * 2 * width /
+			// height);
 			float transX, transY;
 			if (r.nextInt(2) % 2 == 0) {
 				transX = r.nextFloat();
@@ -102,18 +106,7 @@ public class Box {
 	public void draw(GL10 gl) {
 		if (exploding) {
 			if (--t == 0) {
-				uiHandler.post(new Runnable() {
-					@Override
-					public void run() {
-						LinearLayout finalView = (LinearLayout) context
-								.findViewById(R.id.score_layout);
-						TextView score = (TextView) context
-								.findViewById(R.id.final_view_count);
-						score.setText((exploded+1) + "/" + (totalCount + exploded)
-								+ " blasted");
-						finalView.setVisibility(View.VISIBLE);
-					}
-				});
+				displayFinalView();
 			}
 			detectColisions();
 		}
@@ -127,6 +120,41 @@ public class Box {
 				b.draw(gl);
 			}
 		}
+	}
+
+	private void displayFinalView() {
+		uiHandler.post(new Runnable() {
+			@Override
+			public void run() {
+				final ImageView replay = (ImageView) context
+						.findViewById(R.id.replay);
+				replay.setVisibility(View.GONE);
+				final ImageView settings = (ImageView) context
+						.findViewById(R.id.settings);
+				settings.setVisibility(View.GONE);
+
+				LinearLayout finalView = (LinearLayout) context
+						.findViewById(R.id.score_layout);
+				TextView score = (TextView) context
+						.findViewById(R.id.final_view_count);
+				score.setText((exploded) + "/" + (totalCount + exploded - 1)
+						+ " blasted");
+
+				ImageView bigreplay = (ImageView) context
+						.findViewById(R.id.bigreplay);
+				bigreplay.setOnClickListener(new View.OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+						settings.setVisibility(View.VISIBLE);
+						replay.setVisibility(View.VISIBLE);
+						context.mGLView.newGame();
+					}
+				});
+
+				finalView.setVisibility(View.VISIBLE);
+			}
+		});
 	}
 
 	private void detectColisions() {
@@ -147,18 +175,7 @@ public class Box {
 						balls[j].explode();
 						exploded++;
 						if (--totalCount == 0) {
-							uiHandler.post(new Runnable() {
-								@Override
-								public void run() {
-									LinearLayout finalView = (LinearLayout) context
-											.findViewById(R.id.score_layout);
-									TextView score = (TextView) context
-											.findViewById(R.id.final_view_count);
-									score.setText((exploded+1) + "/" + (totalCount
-											+ exploded) + " blasted");
-									finalView.setVisibility(View.VISIBLE);
-								}
-							});
+							displayFinalView();
 						}
 					}
 				}
