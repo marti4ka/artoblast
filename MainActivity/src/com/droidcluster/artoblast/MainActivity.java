@@ -28,9 +28,9 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.SeekBar;
+import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
-
-import com.droidcluster.artoblast.MySeekBar.OnSeekBarChangeListener;
 
 public class MainActivity extends Activity {
 
@@ -251,34 +251,30 @@ public class MainActivity extends Activity {
 	private void openSettingsView() {
 		settingsOpened = true;
 		
-		// TODO nicely done with prefs
-//		RangeSeekBar<Integer> tones = (RangeSeekBar<Integer>) findViewById(R.id.tones);
-//		tones.setImportantValues(1, 10);
-//		tones.setSelectedMaxValue(8);
-//		tones.setSelectedMinValue(3);
-		MySeekBar<Integer> music = (MySeekBar<Integer>) findViewById(R.id.music);
-		music.setImportantValues(1, 10);
+		SeekBar music = (SeekBar) findViewById(R.id.music);
 		int volume = (int) (10 * prefs.getFloat(PREF_VOLUME, DEFAULT_VOLUME));
-		music.setSelectedMaxValue(volume);
-		music.setOnRangeSeekBarChangeListener(new OnSeekBarChangeListener<Integer>() {
-
+		music.setProgress(volume);
+		music.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
+			
 			@Override
-			public void onRangeSeekBarValuesChanged(MySeekBar<?> bar,
-					Integer maxValue) {
-				mediaPlayer.setVolume(maxValue / 10f, maxValue / 10f);
+			public void onStopTrackingTouch(SeekBar seekBar) {
+			}
+			
+			@Override
+			public void onStartTrackingTouch(SeekBar seekBar) {
+			}
+			
+			@Override
+			public void onProgressChanged(SeekBar seekBar, int progress,
+					boolean fromUser) {
+				float volume = progress / 10f;
+				mediaPlayer.setVolume(volume, volume);
 				Editor edit = prefs.edit();
-				edit.putFloat(PREF_VOLUME, (float) maxValue / 10f);
+				edit.putFloat(PREF_VOLUME, (float) volume);
 				edit.commit();
 			}
-
 		});
-//		tones.setOnRangeSeekBarChangeListener(new OnRangeSeekBarChangeListener<Integer>() {
-		// @Override
-		// public void onRangeSeekBarValuesChanged(RangeSeekBar<?> bar,
-		// Integer minValue, Integer maxValue) {
-		// // TODO handle changed range values
-		// }
-		//	});
+
 		LinearLayout layout = (LinearLayout) findViewById(R.id.settings_menu);
 		LayoutParams params = layout.getLayoutParams();
 		int width, height;
