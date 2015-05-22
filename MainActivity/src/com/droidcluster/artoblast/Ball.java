@@ -83,9 +83,11 @@ public class Ball {
 		}
 		if (Math.abs(circleVertices[0]) + radius > maxW) {
 			translationX *= (-1);
+			// TODO MySoundPlayer.playSound(MySoundPlayer.bass);
 		}
 		if (Math.abs(circleVertices[1]) + radius > maxH) {
 			translationY *= (-1);
+			// TODO MySoundPlayer.playSound(MySoundPlayer.bass);
 		}
 
 		addVerticesToBuffer();
@@ -174,6 +176,6 @@ public class Ball {
 
 	public int getExplodingTime() {
 		// V = diff/5 S = 0.2 - 0.02
-		return (int)((explosionRadius - radius) / (diff/5)) + 5;
+		return (int) ((explosionRadius - radius) / (diff / 5)) + 5;
 	}
 }

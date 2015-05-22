@@ -9,6 +9,8 @@ import android.media.SoundPool;
 import com.droidcluster.artoblast.R;
 
 public class MySoundPlayer {
+	
+	public static final int bass = R.raw.bass;
 
 	public static final int[] eight = { R.raw.bup0, R.raw.bup1, R.raw.bup2 };
 	public static final int[] piano = { R.raw.p1a, R.raw.p1b, R.raw.p1c,
@@ -122,6 +124,7 @@ public class MySoundPlayer {
 		soundPoolMap.put(piano[27], soundPool.load(context, R.raw.p4g, 0));
 
 		soundPoolMap.put(piano[28], soundPool.load(context, R.raw.p5a, 0));
+		soundPoolMap.put(bass, soundPool.load(context, R.raw.bass, 0));
 	}
 
 	public static void playSound() {

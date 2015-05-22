@@ -254,6 +254,10 @@ public class MainActivity extends Activity {
 		SeekBar music = (SeekBar) findViewById(R.id.music);
 		int volume = (int) (10 * prefs.getFloat(PREF_VOLUME, DEFAULT_VOLUME));
 		music.setProgress(volume);
+		ImageView icon = (ImageView) findViewById(R.id.musicIcon);
+		if (volume == 0) {
+			icon.setImageResource(R.drawable.mute);
+		}
 		music.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
 			
 			@Override
@@ -267,11 +271,22 @@ public class MainActivity extends Activity {
 			@Override
 			public void onProgressChanged(SeekBar seekBar, int progress,
 					boolean fromUser) {
+				float prev = prefs.getFloat(PREF_VOLUME, DEFAULT_VOLUME);
 				float volume = progress / 10f;
 				mediaPlayer.setVolume(volume, volume);
 				Editor edit = prefs.edit();
 				edit.putFloat(PREF_VOLUME, (float) volume);
 				edit.commit();
+				
+				if (progress == 0 && prev != 0) {
+					ImageView icon = (ImageView) findViewById(R.id.musicIcon);
+					icon.setImageResource(R.drawable.mute);
+				}
+				
+				if (prev == 0 && progress != 0) {
+					ImageView icon = (ImageView) findViewById(R.id.musicIcon);
+					icon.setImageResource(R.drawable.sound);
+				}
 			}
 		});
 
